@@ -1,0 +1,13 @@
+nav {
+  /* align-self: "center"; */
+}
+
+li {
+  display: inline;
+  padding: 14px;
+}
+
+a {
+  text-decoration: none;
+  color: black;
+}
