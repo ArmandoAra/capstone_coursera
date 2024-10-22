@@ -1,9 +1,14 @@
 import React from "react";
 import "./nav.css";
 
+const logo = require("../../assets/logo/Logo.svg").default;
+
 export default function Nav() {
   return (
     <nav>
+      <picture>
+        <img src={logo} alt="Little Lemon Logo" />
+      </picture>
       <ul>
         <li>
           <a href="/">Home</a>

@@ -1,13 +1,54 @@
 nav {
-  /* align-self: "center"; */
+  display: grid;
+  grid-template-columns: 4fr 8fr;
+  grid-template-rows: minmax(130px, auto);
+  align-items: center;
 }
 
-li {
-  display: inline;
-  padding: 14px;
+ul {
+  display: flex;
+  height: 55px;
+  gap: 28px;
+  list-style-type: none;
+  align-items: flex-end;
+  justify-content: center;
 }
 
 a {
   text-decoration: none;
+  font-size: 1.5vw;
+  font-family: "karla", sans-serif;
+  font-weight: 500;
   color: black;
+}
+
+picture {
+  display: flex;
+  justify-content: end;
+  padding-right: 5px;
+}
+
+img {
+  display: inline;
+}
+
+@media (max-width: 600px) {
+  nav {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+    height: 10vh;
+    padding-bottom: 10px;
+  }
+  ul {
+    gap: 15px;
+    align-items: center;
+  }
+
+  a {
+    font-size: 3vw;
+  }
+
+  picture {
+    justify-content: center;
+  }
 }

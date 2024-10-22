@@ -1,11 +1,17 @@
 import "./App.css";
-import Header from "./components/header/header";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+
+import Home from "./pages/Home";
+import BookingPage from "./pages/BookingPage";
 
 function App() {
   return (
-    <>
-      <Header />
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" index element={<Home />} />
+        <Route path="/booking" element={<BookingPage />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 

@@ -2,14 +2,13 @@ import React from "react";
 import "./header.css";
 
 import Nav from "../nav/nav";
-
-import { ReactComponent as LittleLemonLogo } from "../../assets/logo/Logo.svg";
+import HeroSection from "../main/hero";
 
 export default function Header() {
   return (
     <header>
-      <LittleLemonLogo />
       <Nav />
+      <HeroSection />
     </header>
   );
 }

@@ -1,0 +1,57 @@
+.special-title-container {
+  display: grid;
+  grid-template-columns: 1fr 3fr 1fr 3fr 1fr;
+  margin-top: 5vh;
+  justify-items: center;
+  align-items: end;
+}
+
+.special-title {
+  font-size: 48px;
+  font-weight: 500;
+  font-family: "Markazi Text", serif;
+  color: #000;
+}
+
+.specials-cards-container {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 30px;
+  justify-items: center;
+  margin-top: 5vh;
+  margin-bottom: 5vh;
+}
+
+@media (max-width: 900px) {
+  .specials-cards-container > span {
+    display: none;
+  }
+  .specials-cards-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: minmax(1fr, auto);
+    gap: 30px;
+    justify-items: center;
+    margin-top: 5vh;
+  }
+}
+
+@media (max-width: 600px) {
+  .special-title-container {
+    margin-top: 10vh;
+    grid-template-columns: 1fr;
+    justify-items: center;
+    align-items: end;
+  }
+
+  .special-title {
+  }
+
+  .specials-cards-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 30px;
+    justify-items: center;
+    margin-top: 5vh;
+  }
+}
