@@ -18,7 +18,7 @@ const HeroSection = () => {
   };
 
   return (
-    <main className="hero-section">
+    <section className="hero-section">
       <span />
       <article>
         <h1>Little Lemon</h1>
@@ -37,7 +37,7 @@ const HeroSection = () => {
         <img className="hero-image" src={heroImage} alt="restaurant food" />
       </picture>
       <span />
-    </main>
+    </section>
   );
 };
 

@@ -1,8 +1,11 @@
 nav {
   display: grid;
+  width: 80vw;
   grid-template-columns: 4fr 8fr;
   grid-template-rows: minmax(130px, auto);
+  margin: 0 auto;
   align-items: center;
+  justify-items: center;
 }
 
 ul {
@@ -38,6 +41,7 @@ img {
     grid-template-rows: 1fr;
     height: 10vh;
     padding-bottom: 10px;
+    gap: 0;
   }
   ul {
     gap: 15px;
