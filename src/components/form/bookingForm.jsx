@@ -8,15 +8,15 @@ const BookingForm = ({
   actualDate,
   setDate,
   setTime,
+  guests,
   setGuests,
   setOccasion,
-  updateTimes,
   handleSubmit,
 }) => {
   return (
     <>
-      <h2 className="booking-title">Book a Table</h2>
       <form onSubmit={handleSubmit}>
+        <h2 className="booking-title">Book a Table</h2>
         <div className="input-container">
           <label htmlFor="res-date">Choose date</label>
           <input
@@ -32,6 +32,7 @@ const BookingForm = ({
           <label htmlFor="res-time">Choose time</label>
           <select
             id="res-time"
+            value={availableTimes[0]}
             onChange={(e) => {
               setTime(e.target.value);
             }}
@@ -49,11 +50,10 @@ const BookingForm = ({
           <label htmlFor="guests">Number of guests</label>
           <input
             type="number"
-            placeholder="1"
             min="1"
             max="10"
             id="guests"
-            value={1}
+            value={guests}
             onChange={(e) => {
               const value = e.target.value;
               if (value < 1 || value > 10) {

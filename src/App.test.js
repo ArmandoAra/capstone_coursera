@@ -1,19 +1,33 @@
 import React from "react";
 import BookingForm from "../src/components/form/bookingForm";
 import { render, screen, fireEvent } from "@testing-library/react";
-import BookingPage, { initialTimes, timesReducer } from "./pages/BookingPage";
+import BookingPage from "./pages/BookingPage";
 import "@testing-library/jest-dom";
+
+// Pruebas para initialTimes
+import { fetchAPI } from "./data/api";
+import { timesReducer } from "./reducer/timesReducer";
+import { initialTimes } from "./data/constants";
 
 // Pruebas para timesReducer
 // Esta prueba funciona correctamente
 describe("timesReducer", () => {
-  it("debería restablecer a los tiempos iniciales cuando se despacha RESET_TIMES", () => {
-    const currentState = ["17:00", "19:00"];
-    const action = { type: "RESET_TIMES" };
+  it("debería retornar un estado con el mismo formato que initialTimes", () => {
+    const currentState = ["17:00", "18:00", "19:00"]; // Estado actual posible
+    const currentDay = new Date(); //Simulamos la fecha actual
+
+    const data = fetchAPI(currentDay); // Se obtienen las horas disponibles para el día actual
+    const action = { type: "INITIALIZE_TIMES", payload: data };
 
     const newState = timesReducer(currentState, action);
+    // Verifica que newState sea un array
+    expect(Array.isArray(newState)).toBe(true);
 
-    expect(newState).toEqual(initialTimes); // Debe igualarse a initialTimes
+    // Verifica que cada elemento sea un string en el formato HH:MM
+    newState.forEach((time) => {
+      expect(typeof time).toBe("string");
+      expect(time).toMatch(/^\d{2}:\d{2}$/);
+    });
   });
 
   it("debería eliminar una hora cuando se despacha UPDATE_TIMES", () => {

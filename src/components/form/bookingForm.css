@@ -2,7 +2,7 @@ form {
   display: grid;
   height: 50%;
   width: 380px;
-  grid-template-rows: repeat(9, 1fr);
+  grid-template-rows: repeat(5, 1fr);
   align-items: center;
   gap: 20px;
 
@@ -37,7 +37,7 @@ label {
 
 .booking-title {
   display: block;
-  height: 100px;
+  height: 60px;
   color: var(--primary-color2);
   font-family: "Markazi Text", serif;
   font-size: 2.5rem;
