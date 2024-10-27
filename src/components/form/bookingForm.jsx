@@ -8,15 +8,18 @@ const BookingForm = ({
   actualDate,
   setDate,
   setTime,
+  time,
   guests,
+  occasion,
   setGuests,
   setOccasion,
-  handleSubmit,
+  submitForm,
 }) => {
   return (
     <>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={submitForm}>
         <h2 className="booking-title">Book a Table</h2>
+        {/* Date */}
         <div className="input-container">
           <label htmlFor="res-date">Choose date</label>
           <input
@@ -27,12 +30,12 @@ const BookingForm = ({
             aria-required="true" // El campo es obligatorio
           />
         </div>
-
+        {/* Time */}
         <div className="input-container">
           <label htmlFor="res-time">Choose time</label>
           <select
             id="res-time"
-            value={availableTimes[0]}
+            value={time}
             onChange={(e) => {
               setTime(e.target.value);
             }}
@@ -45,7 +48,7 @@ const BookingForm = ({
             ))}
           </select>
         </div>
-
+        {/* Guests */}
         <div className="input-container">
           <label htmlFor="guests">Number of guests</label>
           <input
@@ -66,12 +69,12 @@ const BookingForm = ({
             aria-required="true" // El campo es obligatorio
           />
         </div>
-
+        {/* Occasion */}
         <div className="input-container">
           <label htmlFor="occasion">Occasion</label>
           <select
             id="occasion"
-            value={"Birthday"}
+            value={occasion}
             onChange={(e) => {
               setOccasion(e.target.value);
             }}
@@ -85,7 +88,7 @@ const BookingForm = ({
           title="Book a Table"
           background="#f4ce14"
           type="submit"
-          onClick={handleSubmit}
+          onClick={submitForm}
         />
       </form>
     </>
