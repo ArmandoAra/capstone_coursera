@@ -20,21 +20,42 @@ const currentDay = new Date().toISOString().split("T")[0];
 
 const BookingPage = () => {
   const navigate = useNavigate();
-
+  const [availableTimes, dispatch] = useReducer(timesReducer, initialTimes);
   const [date, setDate] = useState(currentDay);
-  const [time, setTime] = useState("");
   const [guests, setGuests] = useState(1);
   const [occasion, setOccasion] = useState("Birthday");
   const [bookingData, setBookingData] = useState([]);
-  const [availableTimes, dispatch] = useReducer(timesReducer, initialTimes);
+  const [time, setTime] = useState(null);
+
+  // Este useEffect actualiza las horas disponibles cada vez que cambia la fecha o los datos de reserva
+  useEffect(() => {
+    initializeTimes(date);
+  }, [date, bookingData]);
+
+  useEffect(() => {
+    // Obtener los datos de reservas al cargar el componente
+    const storedData = getDateAndTime();
+    initializeTimes(date);
+
+    if (storedData) {
+      setBookingData(storedData);
+    }
+  }, []);
+
+  // useEffect adicional para actualizar `time` cuando `availableTimes` cambie
+  useEffect(() => {
+    if (availableTimes.length > 0) {
+      setTime(availableTimes[0]); // Configura `time` con la primera hora disponible
+      console.log("Primera hora disponible:", availableTimes[0]);
+    }
+  }, [availableTimes]);
 
   // Función para resetear las horas a las iniciales haciendo fetch a la API
   function initializeTimes(date) {
     try {
-      const dateObject = new Date(date);
-      const timeArray = fetchAPI(dateObject);
-      const newTimeArray = filterTime(date, bookingData, timeArray);
-      console.log(newTimeArray);
+      const dateObject = new Date(date); // Convertir la fecha a un objeto Date
+      const timeArray = fetchAPI(dateObject); // Hacer fetch a la API devuelve un arreglo de horas random
+      const newTimeArray = filterTime(date, bookingData, timeArray); // Filtrar las horas disponibles quitando las ocupadas
       dispatch({ type: "INITIALIZE_TIMES", payload: newTimeArray });
     } catch (error) {
       console.log(error);
@@ -46,24 +67,8 @@ const BookingPage = () => {
     dispatch({ type: "UPDATE_TIMES", payload: time });
   }
 
-  useEffect(() => {
-    // Obtener los datos de reservas al cargar el componente
-    const storedData = getDateAndTime();
-    console.log(storedData);
-    if (storedData) {
-      setBookingData(storedData);
-    }
-  }, []);
-
-  // Este useEffect actualiza las horas disponibles cada vez que cambia la fecha o los datos de reserva
-  useEffect(() => {
-    setTime(availableTimes[0]); // Establece la primera hora disponible
-    initializeTimes(date);
-  }, [date, bookingData]);
-
   function submitForm(e) {
     e.preventDefault();
-    updateTimes(time);
     const data = {
       Date: date,
       Time: time,
@@ -74,7 +79,7 @@ const BookingPage = () => {
     try {
       const response = submitAPI(data);
       storeData(data);
-      console.log(data);
+      navigate("/confirmedBooking");
     } catch (error) {
       console.log(error);
     }

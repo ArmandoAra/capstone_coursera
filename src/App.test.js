@@ -1,13 +1,53 @@
 import React from "react";
 import BookingForm from "../src/components/form/bookingForm";
-import { render, screen, fireEvent } from "@testing-library/react";
-import BookingPage from "./pages/BookingPage";
+import { render, screen } from "@testing-library/react";
+
 import "@testing-library/jest-dom";
 
 // Pruebas para initialTimes
 import { fetchAPI } from "./data/api";
 import { timesReducer } from "./reducer/timesReducer";
 import { initialTimes } from "./data/constants";
+
+import { storeData } from "./data/storage";
+
+// Mock de localStorage
+beforeEach(() => {
+  localStorage.clear();
+  jest.clearAllMocks();
+});
+describe("storeData", () => {
+  it("debería guardar el valor en un arreglo si localStorage está vacío", () => {
+    const value = { Date: "2023-10-31", Time: "12:00", Guests: 2 };
+
+    storeData(value);
+
+    const storedData = JSON.parse(localStorage.getItem("tableReserve"));
+    expect(storedData).toEqual([value]);
+  });
+
+  it("debería agregar el nuevo valor al arreglo existente si ya hay datos", () => {
+    const initialData = [{ Date: "2023-10-30", Time: "10:00", Guests: 4 }];
+    localStorage.setItem("tableReserve", JSON.stringify(initialData));
+
+    const newValue = { Date: "2023-10-31", Time: "12:00", Guests: 2 };
+    storeData(newValue);
+
+    const storedData = JSON.parse(localStorage.getItem("tableReserve"));
+    expect(storedData).toEqual([...initialData, newValue]);
+  });
+
+  it("debería manejar correctamente datos previos que no estén en formato de arreglo", () => {
+    const singleData = { Date: "2023-10-30", Time: "10:00", Guests: 4 };
+    localStorage.setItem("tableReserve", JSON.stringify(singleData));
+
+    const newValue = { Date: "2023-10-31", Time: "12:00", Guests: 2 };
+    storeData(newValue);
+
+    const storedData = JSON.parse(localStorage.getItem("tableReserve"));
+    expect(storedData).toEqual([singleData, newValue]);
+  });
+});
 
 // Pruebas para timesReducer
 // Esta prueba funciona correctamente
@@ -65,9 +105,9 @@ describe("BookingPage", () => {
 //
 
 //Este funciona correctamente
-// test("Renders the BookingForm heading", () => {
-//   render(<BookingForm />);
+test("Renders the BookingForm heading", () => {
+  render(<BookingForm />);
 
-//   const h2Element = screen.getByLabelText("Choose date");
-//   expect(h2Element).toBeInTheDocument();
-// });
+  const h2Element = screen.getByLabelText("Choose date");
+  expect(h2Element).toBeInTheDocument();
+});

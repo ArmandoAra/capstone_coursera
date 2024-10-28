@@ -41,17 +41,11 @@ export const getDateAndTime = () => {
   try {
     const data = localStorage.getItem("tableReserve");
     const parsedData = JSON.parse(data);
-    console.log(parsedData);
     const unavailableTime = [];
     for (let item of parsedData) {
       unavailableTime.push({ Date: item.Date, Time: item.Time });
     }
     return unavailableTime;
-    // Object.keys(parsedData).reduce((acc, key) => {
-    //   if (key === "Date" || key === "Time") {
-    //    unavailableTime[key] = parsedData[key];
-    //   }
-    // }, {});
   } catch (error) {
     console.log(error);
     return undefined;

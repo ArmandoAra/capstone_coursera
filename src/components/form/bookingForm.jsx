@@ -36,14 +36,16 @@ const BookingForm = ({
           <select
             id="res-time"
             value={time}
+            required={true} // El campo es obligatorio
             onChange={(e) => {
+              console.log(e.target.value);
               setTime(e.target.value);
             }}
             aria-live="polite" // Anuncia cambios en las opciones dinámicamente
           >
             {availableTimes?.map((time) => (
               <option key={time} value={time}>
-                {time}
+                {time ? time : "No available times"}
               </option>
             ))}
           </select>
