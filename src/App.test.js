@@ -1,6 +1,6 @@
 import React from "react";
 import BookingForm from "../src/components/form/bookingForm";
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 
 import "@testing-library/jest-dom";
 
@@ -8,8 +8,14 @@ import "@testing-library/jest-dom";
 import { fetchAPI } from "./data/api";
 import { timesReducer } from "./reducer/timesReducer";
 import { initialTimes } from "./data/constants";
-
 import { storeData } from "./data/storage";
+
+// Mock funciones de props
+const mockSetDate = jest.fn();
+const mockSetTime = jest.fn();
+const mockSetGuests = jest.fn();
+const mockSetOccasion = jest.fn();
+const mockSubmitForm = jest.fn();
 
 // Mock de localStorage
 beforeEach(() => {
@@ -110,4 +116,81 @@ test("Renders the BookingForm heading", () => {
 
   const h2Element = screen.getByLabelText("Choose date");
   expect(h2Element).toBeInTheDocument();
+});
+
+describe("BookingForm Component", () => {
+  const defaultProps = {
+    availableTimes: ["12:00", "13:00", "14:00"],
+    actualDate: "2024-10-28",
+    setDate: mockSetDate,
+    setTime: mockSetTime,
+    time: "12:00",
+    guests: 2,
+    occasion: "Birthday",
+    setGuests: mockSetGuests,
+    setOccasion: mockSetOccasion,
+    submitForm: mockSubmitForm,
+  };
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  test("calls setDate when a valid date is entered", () => {
+    render(<BookingForm {...defaultProps} />);
+    const dateInput = screen.getByLabelText(/choose date/i);
+    fireEvent.change(dateInput, { target: { value: "2024-11-01" } });
+    expect(mockSetDate).toHaveBeenCalledWith("2024-11-01");
+  });
+
+  test("displays an alert and resets to actualDate on invalid date", () => {
+    global.alert = jest.fn();
+    render(<BookingForm {...defaultProps} />);
+    const dateInput = screen.getByLabelText(/choose date/i);
+    fireEvent.change(dateInput, { target: { value: "invalid-date" } });
+    expect(global.alert).toHaveBeenCalledWith("Invalid date");
+    expect(mockSetDate).toHaveBeenCalledWith("2024-10-28"); // actualDate
+  });
+
+  test("sets guests and validates number of guests within range", () => {
+    render(<BookingForm {...defaultProps} />);
+    const guestsInput = screen.getByLabelText(/number of guests/i);
+
+    // Invalid guest number (out of range)
+    fireEvent.change(guestsInput, { target: { value: "12" } });
+    expect(guestsInput).toHaveAttribute("aria-invalid", "true");
+    expect(mockSetGuests).not.toHaveBeenCalled();
+
+    // Valid guest number
+    fireEvent.change(guestsInput, { target: { value: "4" } });
+    expect(guestsInput).not.toHaveAttribute("aria-invalid");
+    expect(mockSetGuests).toHaveBeenCalledWith("4");
+  });
+
+  test("disables submit button if form data is invalid", () => {
+    const { getByRole } = render(<BookingForm {...defaultProps} />);
+    const submitButton = screen.getByRole("button", { name: /book a table/i });
+
+    // Caso de formulario inválido (sin fecha válida)
+    fireEvent.change(screen.getByLabelText(/choose date/i), {
+      target: { value: "invalid-date" },
+    });
+    // Verifica que la fecha se restablezca a la actual
+    const dateInput = screen.getByLabelText(/choose date/i);
+    expect(dateInput.value).toBe("2024-10-28");
+
+    // Caso de formulario válido (fecha válida)
+    fireEvent.change(screen.getByLabelText(/choose date/i), {
+      target: { value: "2024-10-28" },
+    });
+    expect(submitButton).toBeEnabled();
+  });
+
+  test("calls submitForm on valid form submission", () => {
+    const { getByRole } = render(<BookingForm {...defaultProps} />);
+    const submitButton = screen.getByRole("button", { name: /book a table/i });
+
+    fireEvent.click(submitButton);
+    expect(mockSubmitForm).toHaveBeenCalled();
+  });
 });

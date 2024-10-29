@@ -20,7 +20,7 @@ const currentDay = new Date().toISOString().split("T")[0];
 
 const BookingPage = () => {
   const navigate = useNavigate();
-  const [availableTimes, dispatch] = useReducer(timesReducer, initialTimes);
+  const [availableTimes, dispatch] = useReducer(timesReducer, []);
   const [date, setDate] = useState(currentDay);
   const [guests, setGuests] = useState(1);
   const [occasion, setOccasion] = useState("Birthday");
@@ -46,7 +46,6 @@ const BookingPage = () => {
   useEffect(() => {
     if (availableTimes.length > 0) {
       setTime(availableTimes[0]); // Configura `time` con la primera hora disponible
-      console.log("Primera hora disponible:", availableTimes[0]);
     }
   }, [availableTimes]);
 
