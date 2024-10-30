@@ -1,4 +1,4 @@
-//Funcion para filtrar las horas que no estan disponibles segun la fecha que se escoja
+//function to filter the time array based on the date and time already booked
 export function filterTime(date, bookingData, timeArray) {
   let newTimeArray = timeArray;
 
@@ -19,26 +19,37 @@ export function checkFormData(date, time, guests, occasion) {
   return false;
 }
 
+// Function to convert the date to a number ex: 2021-08-01 => 20210801
+function convertDateToNumber(date) {
+  return parseInt(date.replace(/-/g, ""), 10);
+}
+
 // Functin to validate the date format and not allow past dates
 export function isValidDate(date) {
-  const actualDate = new Date(); // Fecha actual
-  // Expresión regular para el formato "YYYY-MM-DD"
+  const actualDate = new Date();
+  // Regex format "YYYY-MM-DD"
   const regex = /^(\d{4})-(\d{2})-(\d{2})$/;
   const match = date.match(regex);
 
-  if (!match) return false; // Si no coincide con el formato, retorna false
+  if (!match) return false; // If the date does not match the format
 
-  // Extrae año, mes y día
+  // Extract the year, month and day values
   const [_, year, month, day] = match.map(Number);
 
   // Crear un objeto de date con los valores extraídos
   const dateObject = new Date(year, month - 1, day);
 
-  // Verificar que los valores de año, mes y día sean válidos
+  // Verify that the date is not in the past
+  const isNotPastDate =
+    convertDateToNumber(date) >=
+    convertDateToNumber(actualDate.toISOString().slice(0, 10));
+
+  // Verify that the date is in the correct format
   const isValidFormat =
     dateObject.getFullYear() === year &&
     dateObject.getMonth() === month - 1 &&
     dateObject.getDate() === day;
-  if (isValidFormat && dateObject >= actualDate) return true;
+
+  if (isValidFormat && isNotPastDate) return true;
   return false;
 }

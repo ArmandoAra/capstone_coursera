@@ -25,6 +25,12 @@ form {
     width: inherit;
   }
 
+  .alert {
+    color: var(--alert-color);
+    font-size: 1.2rem;
+    font-weight: 500;
+  }
+
   .enabled-select {
     background-color: "white";
   }

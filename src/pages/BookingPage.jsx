@@ -26,6 +26,7 @@ const BookingPage = () => {
   const [occasion, setOccasion] = useState("Birthday");
   const [bookingData, setBookingData] = useState([]);
   const [time, setTime] = useState(null);
+  const [alert, setAlert] = useState(false);
 
   // Este useEffect actualiza las horas disponibles cada vez que cambia la fecha o los datos de reserva
   useEffect(() => {
@@ -91,6 +92,8 @@ const BookingPage = () => {
         actualDate={date}
         occasion={occasion}
         time={time}
+        alert={alert}
+        setAlert={setAlert}
         guests={guests}
         setDate={setDate}
         setTime={setTime}

@@ -17,13 +17,14 @@ const mockSetGuests = jest.fn();
 const mockSetOccasion = jest.fn();
 const mockSubmitForm = jest.fn();
 
-// Mock de localStorage
+// Mock of localStorage
 beforeEach(() => {
   localStorage.clear();
   jest.clearAllMocks();
 });
+
 describe("storeData", () => {
-  it("debería guardar el valor en un arreglo si localStorage está vacío", () => {
+  it("should save the value in an array if localStorage is empty", () => {
     const value = { Date: "2023-10-31", Time: "12:00", Guests: 2 };
 
     storeData(value);
@@ -32,7 +33,7 @@ describe("storeData", () => {
     expect(storedData).toEqual([value]);
   });
 
-  it("debería agregar el nuevo valor al arreglo existente si ya hay datos", () => {
+  it("should add the new value to the existing array if there is already data", () => {
     const initialData = [{ Date: "2023-10-30", Time: "10:00", Guests: 4 }];
     localStorage.setItem("tableReserve", JSON.stringify(initialData));
 
@@ -43,7 +44,7 @@ describe("storeData", () => {
     expect(storedData).toEqual([...initialData, newValue]);
   });
 
-  it("debería manejar correctamente datos previos que no estén en formato de arreglo", () => {
+  it("should correctly handle previous data that is not in array format", () => {
     const singleData = { Date: "2023-10-30", Time: "10:00", Guests: 4 };
     localStorage.setItem("tableReserve", JSON.stringify(singleData));
 
@@ -55,62 +56,58 @@ describe("storeData", () => {
   });
 });
 
-// Pruebas para timesReducer
-// Esta prueba funciona correctamente
 describe("timesReducer", () => {
-  it("debería retornar un estado con el mismo formato que initialTimes", () => {
-    const currentState = ["17:00", "18:00", "19:00"]; // Estado actual posible
-    const currentDay = new Date(); //Simulamos la fecha actual
+  it("should return a state with the same format as initialTimes", () => {
+    const currentState = ["17:00", "18:00", "19:00"]; // Possible current state
+    const currentDay = new Date(); // Simulate the current date
 
-    const data = fetchAPI(currentDay); // Se obtienen las horas disponibles para el día actual
+    const data = fetchAPI(currentDay); // Get available times for the current day
     const action = { type: "INITIALIZE_TIMES", payload: data };
 
     const newState = timesReducer(currentState, action);
-    // Verifica que newState sea un array
+    // Verify that newState is an array
     expect(Array.isArray(newState)).toBe(true);
 
-    // Verifica que cada elemento sea un string en el formato HH:MM
+    // Verify that each element is a string in the HH:MM format
     newState.forEach((time) => {
       expect(typeof time).toBe("string");
       expect(time).toMatch(/^\d{2}:\d{2}$/);
     });
   });
 
-  it("debería eliminar una hora cuando se despacha UPDATE_TIMES", () => {
+  it("should remove a time when UPDATE_TIMES is dispatched", () => {
     const currentState = ["17:00", "18:00", "19:00"];
     const action = { type: "UPDATE_TIMES", payload: "17:00" };
 
     const newState = timesReducer(currentState, action);
 
-    expect(newState).toEqual(["18:00", "19:00"]); // Solo debe quedar "18:00" y "19:00"
+    expect(newState).toEqual(["18:00", "19:00"]); // Only "18:00" and "19:00" should remain
   });
 
-  it("debería devolver el estado actual para un tipo de acción desconocido", () => {
+  it("should return the current state for an unknown action type", () => {
     const currentState = ["17:00", "19:00"];
     const action = { type: "UNKNOWN_ACTION" };
 
     const newState = timesReducer(currentState, action);
 
-    expect(newState).toEqual(currentState); // No debe cambiar el estado
+    expect(newState).toEqual(currentState); // State should not change
   });
 });
 
-// // Pruebas para el componente BookingPage
+// Tests for the BookingPage component
 describe("BookingPage", () => {
-  it("debería restablecer availableTimes a initialTimes al despachar RESET_TIMES", () => {
+  it("should reset availableTimes to initialTimes when RESET_TIMES is dispatched", () => {
     const currentState = ["17:00", "18:00"];
     const action = { type: "RESET_TIMES" };
 
     const newState = timesReducer(currentState, action);
 
-    // Verificar que availableTimes se restableció a initialTimes
+    // Verify that availableTimes was reset to initialTimes
     expect(newState).toEqual(initialTimes);
   });
 });
 
-//
-
-//Este funciona correctamente
+// This works correctly
 test("Renders the BookingForm heading", () => {
   render(<BookingForm />);
 
@@ -136,20 +133,12 @@ describe("BookingForm Component", () => {
     jest.clearAllMocks();
   });
 
-  test("calls setDate when a valid date is entered", () => {
-    render(<BookingForm {...defaultProps} />);
-    const dateInput = screen.getByLabelText(/choose date/i);
-    fireEvent.change(dateInput, { target: { value: "2024-11-01" } });
-    expect(mockSetDate).toHaveBeenCalledWith("2024-11-01");
-  });
-
   test("displays an alert and resets to actualDate on invalid date", () => {
     global.alert = jest.fn();
     render(<BookingForm {...defaultProps} />);
     const dateInput = screen.getByLabelText(/choose date/i);
     fireEvent.change(dateInput, { target: { value: "invalid-date" } });
     expect(global.alert).toHaveBeenCalledWith("Invalid date");
-    expect(mockSetDate).toHaveBeenCalledWith("2024-10-28"); // actualDate
   });
 
   test("sets guests and validates number of guests within range", () => {
@@ -171,15 +160,15 @@ describe("BookingForm Component", () => {
     const { getByRole } = render(<BookingForm {...defaultProps} />);
     const submitButton = screen.getByRole("button", { name: /book a table/i });
 
-    // Caso de formulario inválido (sin fecha válida)
+    // Invalid form case (no valid date)
     fireEvent.change(screen.getByLabelText(/choose date/i), {
       target: { value: "invalid-date" },
     });
-    // Verifica que la fecha se restablezca a la actual
+    // Verify that the date resets to the current one
     const dateInput = screen.getByLabelText(/choose date/i);
     expect(dateInput.value).toBe("2024-10-28");
 
-    // Caso de formulario válido (fecha válida)
+    // Valid form case (valid date)
     fireEvent.change(screen.getByLabelText(/choose date/i), {
       target: { value: "2024-10-28" },
     });

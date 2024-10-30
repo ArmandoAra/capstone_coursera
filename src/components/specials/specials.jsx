@@ -18,7 +18,7 @@ const Specials = () => {
         <CustomButton
           title="Online Menu"
           background="#f4ce14"
-          onClick={() => console.log("Online Menu")}
+          onClick={() => alert("Menu is not available yet")}
         />
         <span />
       </div>

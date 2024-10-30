@@ -9,6 +9,9 @@ const BookingForm = ({
   actualDate,
   setDate,
   setTime,
+  alert,
+  setAlert,
+
   time,
   guests,
   occasion,
@@ -26,20 +29,23 @@ const BookingForm = ({
         {/* Date */}
         <div className="input-container">
           <label htmlFor="res-date">Choose date</label>
+
           <input
             onChange={(e) =>
               isValidDate(e.target.value)
                 ? setDate(e.target.value)
-                : (window.alert("Invalid date"), setDate(actualDate))
+                : window.alert("Invalid date")
             }
             type="date"
+            min={new Date().toISOString().slice(0, 10)}
             id="res-date"
             value={actualDate}
             aria-required="true"
             aria-describedby="date-help"
           />
+
           <p id="date-help" className="help-text">
-            Select a valid date for your reservation.
+            The reservation is for this date <strong>{actualDate}</strong>.
           </p>
         </div>
 
@@ -61,12 +67,7 @@ const BookingForm = ({
             aria-describedby="time-help"
           >
             {availableTimes?.length === 0 ? (
-              <option
-                style={{ color: "red", backgroundColor: "blue" }}
-                value=""
-              >
-                Unavailable tables
-              </option>
+              <option>Unavailable tables</option>
             ) : (
               availableTimes?.map((time) => (
                 <option key={time} value={time}>

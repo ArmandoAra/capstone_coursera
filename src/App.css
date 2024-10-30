@@ -24,4 +24,6 @@ h6 {
 
   --highlight-color1: #edefee;
   --highlight-color2: #333333;
+
+  --alert-color: #ff0000;
 }

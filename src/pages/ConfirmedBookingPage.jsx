@@ -1,11 +1,19 @@
-import React from "react";
+import React, { useEffect } from "react";
+import ConfirmedCard from "../components/confirmation/confirmedCard";
+
+import { getLastItem } from "../data/storage";
 
 const ConfirmedBooking = () => {
-  //console.log(bookingData); que viene de BookingPage
-  // console.log(this.state.bookingData);
+  const [bookingData, setBookingData] = React.useState({});
+
+  useEffect(() => {
+    const data = getLastItem();
+    setBookingData(data);
+  }, []);
+
   return (
     <>
-      <h2>Booking Confirmed</h2>
+      <ConfirmedCard bookingData={bookingData} />
     </>
   );
 };

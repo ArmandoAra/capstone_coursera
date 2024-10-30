@@ -51,3 +51,14 @@ export const getDateAndTime = () => {
     return undefined;
   }
 };
+
+export const getLastItem = () => {
+  try {
+    const data = localStorage.getItem("tableReserve");
+    const parsedData = JSON.parse(data);
+    return parsedData[parsedData.length - 1];
+  } catch (error) {
+    console.log(error);
+    return undefined;
+  }
+};
